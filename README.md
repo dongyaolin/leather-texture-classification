@@ -10,7 +10,7 @@
 [![多用途应用](https://img.shields.io/badge/多用途-适用-success)](多用途链接)
 
 这个项目基于深度学习技术，旨在识别和分类各种皮革纹理。无论您是从事时尚设计、工业制造还是艺术创作，这个项目将为您提供一个高效的纹理分类系统。
-皮革分类项目。
+
 
 
 <details>
@@ -54,6 +54,6 @@
 
 欢迎任何形式的贡献和反馈！您可以通过提交 Issue 或 Pull Request 的方式参与项目，帮助改进代码质量、增加新功能或修复 Bug。
 
-### 版权和许可[![版权](https://img.shields.io/badge/版权-Duncan_Dong-orange)](版权链接) [![许可证](https://img.shields.io/badge/许可证-Apache%202.0-green)](许可证链接)
+### 版权和许可 [![版权](https://img.shields.io/badge/版权-Duncan_Dong-orange)](版权链接) [![许可证](https://img.shields.io/badge/许可证-Apache%202.0-green)](许可证链接)
 
 该项目采用 Apache 许可证 2.0。
