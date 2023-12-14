@@ -1,0 +1,5 @@
+皮革纹理分类使用resnet50进行迁移学习
+
+在identify_dataset数据集上，模型训练集acc接近1，但在测试集上仅为80左右。
+
+分别训练了在输入三通道图像和单通道图像进行训练得到对应模型resnet50_channel3.pth和resnet50_channel1.pth
