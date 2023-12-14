@@ -1,5 +1,6 @@
 *.log  
 logs/
+.idea/
 # 忽略 Python 编译生成的文件
 __pycache__/
 *.pyc
