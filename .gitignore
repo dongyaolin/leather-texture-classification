@@ -1,0 +1,12 @@
+*.log  
+logs/
+# 忽略 Python 编译生成的文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 忽略虚拟环境和依赖库
+venv/
+env/
+*.env
