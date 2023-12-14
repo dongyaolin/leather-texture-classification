@@ -3,17 +3,34 @@ import torch.nn as nn
 from torch import optim
 from torchvision import models
 from torchvision.models import VGG16_BN_Weights, ResNet50_Weights, GoogLeNet_Weights
-
 import numpy as np
 import os
-
-from dataset_v2 import DataSet_V2
+from dataset import DataSet
 from metrics import AccuracyScore
 
 torch.set_printoptions(precision=2, sci_mode=False)
 
 
-class DogCatClassifier_V5:
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.layer1 = nn.Sequential(nn.Conv2d(1, 64, 3, 1, 1),
+                                    nn.BatchNorm2d(64),
+                                    nn.LeakyReLU(),
+                                    nn.Conv2d(64, 128, 1, 1, 0),
+                                    nn.AdaptiveMaxPool2d(7),
+                                    nn.LeakyReLU(),
+                                    nn.Flatten(),
+                                    nn.Linear(7 * 7 * 128, 1024),
+                                    nn.Dropout(0.5),
+                                    nn.Linear(1024, 2)
+                                    )
+
+    def forward(self, x):
+        return self.layer1(x)
+
+
+class Classifier:
     def __init__(self, model, train_data_dir, test_data_dir):
         self.batch_size = 64
         self.num_workers = 0
@@ -53,12 +70,12 @@ class DogCatClassifier_V5:
 
     def train(self):
         # 1. 加载数据
-        trainset = DataSet_V2(root_dir=self.train_data_dir,
+        trainset = DataSet(root_dir=self.train_data_dir,
                               batch_size=self.batch_size,
                               shuffle=True,
                               num_workers=self.num_workers,
                               istrainning=True)
-        testset = DataSet_V2(root_dir=self.test_data_dir,
+        testset = DataSet(root_dir=self.test_data_dir,
                              batch_size=self.batch_size,
                              shuffle=False,
                              num_workers=self.num_workers,
@@ -116,18 +133,24 @@ class DogCatClassifier_V5:
 
 
 if __name__ == '__main__':
-    # vgg = models.vgg16_bn(weights=VGG16_BN_Weights.IMAGENET1K_V1)
-    # googlenet = models.googlenet(weights=GoogLeNet_Weights.IMAGENET1K_V1)
-    # googlenet = models.googlenet()
-    resnet = models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+    if 1:
+        train_data_dir = './row_dataset/training_data'
+        test_data_dir = './row_dataset/testing_data'
+        net = Net()
+        model = Classifier(net, train_data_dir, test_data_dir)
+        model.train()
 
-    # vgg.classifier[6] = nn.Linear(in_features=4096, out_features=2, bias=True)
-    # googlenet.fc = nn.Linear(in_features=1024, out_features=2, bias=True)
-    resnet.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-    resnet.fc = nn.Linear(in_features=2048, out_features=27, bias=True)
-    net = Net()
-    train_data_dir = './identify_dataset/training_data'
-    test_data_dir = './identify_dataset/testing_data'
-    # print(resnet.conv1)
-    model = DogCatClassifier_V5(resnet, train_data_dir, test_data_dir)
-    model.train()
+    # train
+    if 0:
+        train_data_dir = './identify_dataset/training_data'
+        test_data_dir = './identify_dataset/testing_data'
+        # vgg = models.vgg16_bn(weights=VGG16_BN_Weights.IMAGENET1K_V1)
+        # googlenet = models.googlenet(weights=GoogLeNet_Weights.IMAGENET1K_V1)
+        # googlenet = models.googlenet()
+        resnet = models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+        # vgg.classifier[6] = nn.Linear(in_features=4096, out_features=2, bias=True)
+        # googlenet.fc = nn.Linear(in_features=1024, out_features=2, bias=True)
+        resnet.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        resnet.fc = nn.Linear(in_features=2048, out_features=27, bias=True)
+        model = Classifier(resnet, train_data_dir, test_data_dir)
+        model.train()
