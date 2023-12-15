@@ -32,8 +32,7 @@ if __name__ == '__main__':
     # model.eval()
 
     with torch.no_grad():
-        img = Image.open(r".\test_images\caoweihua1\0cc54a51a18783c00f1a3c7202df3837.jpg").convert("RGB")
-
+        img = Image.open(r".\test_images\class_1\0cc54a51a18783c00f1a3c7202df3837.jpg").convert("RGB")
         img = ts(img)
         img = img[None, ...]
         r = model(img)
