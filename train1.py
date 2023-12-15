@@ -10,7 +10,6 @@ import os
 from dataset import DataSet
 from metrics import AccuracyScore
 import pandas as pd
-
 torch.set_printoptions(precision=2, sci_mode=False)
 
 
@@ -35,7 +34,7 @@ class Net(nn.Module):
 
 class Classifier:
     def __init__(self, model, train_data_dir, test_data_dir, fig):
-        self.batch_size = 64
+        self.batch_size = 32
         self.num_workers = 0
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = model
@@ -54,6 +53,8 @@ class Classifier:
         self.fig = True
         if not os.path.exists(self.model_dir):
             os.makedirs(self.model_dir)
+        if not os.path.exists("./fig1"):
+            os.makedirs("./fig1")
         else:
             # names = os.listdir(self.model_dir)
             # if len(names) > 0:
@@ -128,7 +129,7 @@ class Classifier:
                 if batch % self.print_interval == 0:
                     print(f'{epoch + 1}/{self.total_epoch} {batch} test_loss={loss.item()} -- {acc.item():.4f}')
                 batch += 1
-                if epoch % 10 == 0:
+                if epoch+1 % 10 == 0:
                     self.save_model(epoch)
 
             print(f'{epoch} train mean loss {np.mean(train_loss):.4f} test mean loss {np.mean(test_loss):.4f}'
@@ -140,7 +141,7 @@ class Classifier:
         df_test = pd.DataFrame(
             {'test_loss': test_loss, 'test_acc': test_acc})
         df_test.index = range(1, len(test_loss) + 1)
-        df_test.to_csv('./fig/test_log.csv')
+        df_test.to_csv('./fig1/test_log.csv')
         if self.fig:
             plt.figure(figsize=(12, 8), dpi=200)
             plt.plot(df_train.index, df_train.loc[:, 'train_loss'], label='train_loss')
@@ -150,7 +151,7 @@ class Classifier:
             plt.legend()
             plt.title('loss&acc')
             plt.xlabel('epoch')
-            plt.savefig(f'./fig/{time.strftime("%d%H%M")}.jpg')
+            plt.savefig(f'./fig1/{time.strftime("%d%H%M")}.jpg')
             plt.pause(1)
 
 

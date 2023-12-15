@@ -54,6 +54,8 @@ class Classifier:
         self.fig = True
         if not os.path.exists(self.model_dir):
             os.makedirs(self.model_dir)
+        if not os.path.exists("./fig"):
+            os.makedirs("./fig")
         else:
             # names = os.listdir(self.model_dir)
             # if len(names) > 0:
@@ -128,7 +130,7 @@ class Classifier:
                 if batch % self.print_interval == 0:
                     print(f'{epoch + 1}/{self.total_epoch} {batch} test_loss={loss.item()} -- {acc.item():.4f}')
                 batch += 1
-                if epoch % 10 == 0:
+                if epoch+1 % 10 == 0:
                     self.save_model(epoch)
 
             print(f'{epoch} train mean loss {np.mean(train_loss):.4f} test mean loss {np.mean(test_loss):.4f}'
