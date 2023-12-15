@@ -46,9 +46,18 @@
 
 ### 使用方法
 
-1. - [x] **数据准备**：准备包含各种皮革图像的数据集，并按类别进行组织。[![数据准备](https://img.shields.io/badge/详细说明-orange)](数据准备链接)    
-2. - [x] **模型训练**：使用提供的训练脚本对数据集进行训练，或者根据自己的需求修改并训练模型。[![模型训练](https://img.shields.io/badge/使用指南-red)](模型训练链接)    
-3. - [ ] **启动后端**：运行后端服务，提供图像分类的 API。[![后端服务](https://img.shields.io/badge/后端服务-启动指南-blue)](后端服务链接)    
+1. - [x] **数据准备**：准备包含各种皮革图像的数据集，并按类别进行组织。[![数据准备](https://img.shields.io/badge/详细说明-orange)](https://www.pullywood.com/ImageAssistant/)
+- 将收集到的原始数据按照皮革纹理类别放入文件夹row。如果同一类别图像在不同文件夹下，可通过scipts中的getimggromdir将同一类别图像放在一个文件夹内。
+- 可以使用rm_duplicates.py对图像进行去重。
+- 将收集到的原始数据如果想重命名，可使用scripts中的rename.py进行重命名，结合需求修改代码。
+- 使用dataaug_every.py脚本对每一类别进行基础数据增强，该过程也可以在训练过程的dataset.py进行。
+- 使用splitdataset.py脚本对原始分类好的数据集进行训练集和测试集划分。并放入identify_dataset文件夹下。注意：划分比例不同可能导致部分数据不能完全划分到训练集或测试集。
+2. - [x] **模型训练**：使用提供的训练脚本对数据集进行训练，或者根据自己的需求修改并训练模型。![模型训练](https://img.shields.io/badge/使用指南-red)
+   - 准备完分类好的数据集后。 使用:
+   - ```python
+     python train1.py
+   - 训练好的模型位于models1文件夹下。
+3. - [ ] **启动后端**：运行后端服务，提供图像分类的 API。![后端服务](https://img.shields.io/badge/后端服务-启动指南-blue)
 4. - [ ] **API 调用**：通过 API 发送图像并接收分类结果。[![API 调用](https://img.shields.io/badge/API%20调用-示例代码-lightgrey)](API调用链接) 
 ### 贡献指南 [![提交 Issue](https://img.shields.io/badge/提交-Issue-9cf)](提交Issue链接) [![Pull Request](https://img.shields.io/badge/Pull%20Request-贡献代码-brightgreen)](PR链接)
 
