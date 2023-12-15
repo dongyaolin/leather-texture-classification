@@ -44,7 +44,8 @@ if __name__ == '__main__':
         for i in os.listdir(src):
             img = Image.open(os.path.join(src, i))
             img = ts(img)
-            img = img[None, ...]
+            # img = img[None, ...]
+            img = img.unsqueeze(0)
             r = model(img)
             # print(r)  # (1,2)
             # print(softmax(r[0].numpy()))
