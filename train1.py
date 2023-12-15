@@ -34,14 +34,14 @@ class Net(nn.Module):
 
 class Classifier:
     def __init__(self, model, train_data_dir, test_data_dir, fig):
-        self.batch_size = 32
+        self.batch_size = 64
         self.num_workers = 0
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = model
         self.train_data_dir = train_data_dir
         self.test_data_dir = test_data_dir
         self.total_epoch = 100
-        self.lr = 0.003
+        self.lr = 0.005
         self.loss_fn = nn.CrossEntropyLoss()
         self.acc_fn = AccuracyScore()
         self.opt = optim.SGD(

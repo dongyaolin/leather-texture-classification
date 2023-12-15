@@ -10,10 +10,10 @@ import random
 
 
 class ImageAugmenter:
-    def __init__(self, folder_path, save_path):
+    def __init__(self, folder_path, save_path, num):
         self.folder_path = folder_path
         self.save_path = save_path
-
+        self.num = num
     def augment_images(self):
         # 遍历文件夹中的所有图片
         for filename in os.listdir(self.folder_path):
@@ -23,7 +23,7 @@ class ImageAugmenter:
                 original_image = Image.open(image_path)
 
                 # 对图片进行数据增强
-                for i in range(100):
+                for i in range(self.num):
                     # 随机旋转
                     rotated_image = original_image.rotate(angle=random.randint(-30, 30))
 
@@ -53,12 +53,12 @@ class ImageAugmenter:
                 # 将所有增强后的图片统一大小并保存
                 for i, filename in enumerate(os.listdir(self.save_path)):
                     if filename.startswith('rotated_image_{}'.format(filename)) or filename.startswith(
-                            'cropped_image_{}'.format(filename)) or filename.startswith(
-                            'inverted_image_{}'.format(filename)):
+                            'cropped_image_{}'.format(filename)) or filename.startswith('inverted_image_{}'.format(filename)):
                         image = Image.open(os.path.join(self.save_path, filename))
                         resized_image = image.resize((224, 224))
                         resized_image.save(os.path.join(self.save_path, 'esized_image_{}_{}.jpg'.format(filename, i)))
 
+
 if __name__ == '__main__':
-    augmenter = ImageAugmenter('../row/class_1', '../row/images')
+    augmenter = ImageAugmenter('../row/class_1', '../row/images', 100)
     augmenter.augment_images()
