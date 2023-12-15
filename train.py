@@ -75,15 +75,15 @@ class Classifier:
     def train(self):
         # 1. 加载数据
         trainset = DataSet(root_dir=self.train_data_dir,
-                              batch_size=self.batch_size,
-                              shuffle=True,
-                              num_workers=self.num_workers,
-                              istrainning=True)
+                           batch_size=self.batch_size,
+                           shuffle=True,
+                           num_workers=self.num_workers,
+                           istrainning=True)
         testset = DataSet(root_dir=self.test_data_dir,
-                             batch_size=self.batch_size,
-                             shuffle=False,
-                             num_workers=self.num_workers,
-                             istrainning=False)
+                          batch_size=self.batch_size,
+                          shuffle=False,
+                          num_workers=self.num_workers,
+                          istrainning=False)
         train_loss = []
         train_acc = []
         test_loss = []
