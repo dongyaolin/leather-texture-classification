@@ -55,8 +55,8 @@ class DataSet:
 if __name__ == '__main__':
     batch_size = 8
     num_workers = 0
-    train_dataset = DataSet('./identify_dataset/training_data', batch_size, True, num_workers)
-    test_dataset = DataSet('./identify_dataset/testing_data', batch_size, False, num_workers)
+    train_dataset = DataSet('./identify_dataset/training_data', batch_size, True, num_workers,False)
+    test_dataset = DataSet('./identify_dataset/testing_data', batch_size, False, num_workers, False)
     # print(len(train_dataset))
     # print(len(test_dataset))
     # print(len(test_small_dataset))
