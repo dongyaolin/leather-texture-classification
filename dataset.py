@@ -27,7 +27,6 @@ class DataSet:
             ])
         else:
             return transforms.Compose([
-                
                 transforms.Lambda(self.convert_img),
                 transforms.Grayscale(),
                 # 随机水平翻转输入图像
