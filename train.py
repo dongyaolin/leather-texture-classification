@@ -42,7 +42,7 @@ class Classifier:
         self.train_data_dir = train_data_dir
         self.test_data_dir = test_data_dir
         self.total_epoch = 100
-        self.lr = 0.005
+        self.lr = 0.003
         self.loss_fn = nn.CrossEntropyLoss()
         self.acc_fn = AccuracyScore()
         self.opt = optim.SGD(
@@ -128,26 +128,30 @@ class Classifier:
                 if batch % self.print_interval == 0:
                     print(f'{epoch + 1}/{self.total_epoch} {batch} test_loss={loss.item()} -- {acc.item():.4f}')
                 batch += 1
-                self.save_model(epoch)
+                if epoch % 10 == 0:
+                    self.save_model(epoch)
 
             print(f'{epoch} train mean loss {np.mean(train_loss):.4f} test mean loss {np.mean(test_loss):.4f}'
                   f' train mean acc {np.mean(train_acc):.4f} test mean acc {np.mean(test_acc):.4f}')
-            self.save_model(self.total_epoch)
-        df = pd.DataFrame(
-            {'train_loss': train_loss, 'test_loss': test_loss, 'train_acc': train_acc, 'test_acc': test_acc})
-        df.index = range(1, len(train_loss) + 1)
-        df.to_csv('./fig/log.csv')
+        df_train = pd.DataFrame(
+            {'train_loss': train_loss, 'train_acc': train_acc})
+        df_train.index = range(1, len(train_loss) + 1)
+        df_train.to_csv('./fig/train_log.csv')
+        df_test = pd.DataFrame(
+            {'test_loss': test_loss, 'test_acc': test_acc})
+        df_test.index = range(1, len(test_loss) + 1)
+        df_test.to_csv('./fig/test_log.csv')
         if self.fig:
             plt.figure(figsize=(12, 8), dpi=200)
-            plt.plot(df.index, df.loc[:, 'train_loss'], label='train_loss')
-            plt.plot(df.index, df.loc[:, 'test_loss'], label='test_loss')
-            plt.plot(df.index, df.loc[:, 'train_acc'], label='train_acc')
-            plt.plot(df.index, df.loc[:, 'test_acc'], label='test_acc')
+            plt.plot(df_train.index, df_train.loc[:, 'train_loss'], label='train_loss')
+            plt.plot(df_train.index, df_train.loc[:, 'train_acc'], label='train_acc')
+            plt.plot(df_test.index, df_test.loc[:, 'test_loss'], label='test_loss')
+            plt.plot(df_test.index, df_test.loc[:, 'test_acc'], label='test_acc')
             plt.legend()
             plt.title('loss&acc')
             plt.xlabel('epoch')
             plt.savefig(f'./fig/{time.strftime("%d%H%M")}.jpg')
-            plt.pause(5)
+            plt.pause(1)
 
 
 if __name__ == '__main__':
@@ -174,7 +178,7 @@ if __name__ == '__main__':
         # googlenet.fc = nn.Linear(in_features=1024, out_features=2, bias=True)
         resnet.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         resnet.fc = nn.Linear(in_features=2048, out_features=27, bias=True)
-        model = Classifier(resnet, train_data_dir, test_data_dir)
+        model = Classifier(resnet, train_data_dir, test_data_dir, fig=1)
         model.train()
         end = time.time()
         print(f'{model} training time:{end - start:.2f}s')
