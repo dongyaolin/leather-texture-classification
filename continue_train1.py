@@ -1,43 +1,156 @@
+import os
+import time
+import numpy as np
+import pandas as pd
 import torch
 import torchvision.models as models
 import torch.optim as optim
+from matplotlib import pyplot as plt
+from torch import nn
+from dataset import DataSet
+from metrics import AccuracyScore
+from torchvision.models import VGG16_BN_Weights, ResNet50_Weights, GoogLeNet_Weights, ResNet18_Weights
+
+
+class Classifier:
+    def __init__(self, model, train_data_dir, test_data_dir, fig=True):
+        self.batch_size = 128
+        self.num_workers = 0
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = model
+        self.train_data_dir = train_data_dir
+        self.test_data_dir = test_data_dir
+        self.total_epoch = 200
+        self.lr = 0.0001
+        self.loss_fn = nn.CrossEntropyLoss()
+        self.acc_fn = AccuracyScore()
+        self.opt = optim.SGD(
+            params=[p for p in self.model.parameters() if p.requires_grad is True],
+            lr=self.lr
+        )
+        self.print_interval = 2
+        self.model_dir = './models1_continue'
+        self.fig = fig
+        if not os.path.exists(self.model_dir):
+            os.makedirs(self.model_dir)
+        if not os.path.exists("./fig1_continue"):
+            os.makedirs("./fig1_continue")
+        else:
+            # names = os.listdir(self.model_dir)
+            # if len(names) > 0:
+            #     names.sort()
+            #     name = names[-1]
+            #     missing_keys, unexpected_keys = self.model.load_state_dict(
+            #         torch.load(os.path.join(self.model_dir, name)))
+            ...
+        self.model = self.model.to(self.device)  # 注意这一行要放在后面
+
+    def save_model(self, epoch):
+        # 模型保存
+        if epoch == self.total_epoch:
+            model_path = os.path.join(self.model_dir, "best.pth")
+        else:
+            model_path = os.path.join(self.model_dir, f"model_{epoch:04d}.pth")
+        torch.save(self.model.state_dict(), model_path)
+
+    def train(self):
+        # 1. 加载数据
+        trainset = DataSet(root_dir=self.train_data_dir,
+                           batch_size=self.batch_size,
+                           shuffle=True,
+                           num_workers=self.num_workers,
+                           istrainning=True)
+        testset = DataSet(root_dir=self.test_data_dir,
+                          batch_size=self.batch_size,
+                          shuffle=False,
+                          num_workers=self.num_workers,
+                          istrainning=False)
+        train_loss = []
+        train_acc = []
+        test_loss = []
+        test_acc = []
+        for epoch in range(self.total_epoch):
+            self.model.train(True)  # Sets the module in training mode.
+
+            batch = 0
+            for inputs, labels in trainset:
+                inputs = inputs.to(self.device)
+                labels = labels.to(self.device)
+
+                # forward
+                output = self.model(inputs)
+                loss = self.loss_fn(output, labels)
+
+                # backward
+                self.opt.zero_grad()
+                loss.backward()
+                self.opt.step()
+
+                acc = self.acc_fn(output, labels)
+
+                train_loss.append(loss.item())
+                train_acc.append(acc)
+                if batch % self.print_interval == 0:
+                    print(f'{epoch + 1}/{self.total_epoch} {batch} train_loss={loss.item()} -- {acc.item():.4f}')
+                batch += 1
+
+            batch = 0
+            for data in testset:
+                inputs, labels = data
+                inputs = inputs.to(self.device)
+                labels = labels.to(self.device)
+                # forward
+                output = self.model(inputs)
+                loss = self.loss_fn(output, labels)
+                acc = self.acc_fn(output, labels)
+
+                test_loss.append(loss.item())
+                test_acc.append(acc.item())
+                if batch % self.print_interval == 0:
+                    print(f'{epoch + 1}/{self.total_epoch} {batch} test_loss={loss.item()} -- {acc.item():.4f}')
+                    batch += 1
+                    if (epoch + 1) % 10 == 0:
+                        self.save_model((epoch + 1))
+                        print(f'model_{(epoch + 1)}model has saved!')
+
+            print(f'{epoch} train mean loss {np.mean(train_loss):.4f} test mean loss {np.mean(test_loss):.4f}'
+                  f' train mean acc {np.mean(train_acc):.4f} test mean acc {np.mean(test_acc):.4f}')
+        df_train = pd.DataFrame(
+            {'train_loss': train_loss, 'train_acc': train_acc})
+        df_train.index = range(1, len(train_loss) + 1)
+        df_train.to_csv('./fig1_continue/train_log.csv')
+        df_test = pd.DataFrame(
+            {'test_loss': test_loss, 'test_acc': test_acc})
+        df_test.index = range(1, len(test_loss) + 1)
+        df_test.to_csv('./fig1_continue/test_log.csv')
+        if self.fig:
+            plt.figure(figsize=(12, 8), dpi=200)
+            plt.plot(df_train.index, df_train.loc[:, 'train_loss'], label='train_loss')
+            plt.plot(df_train.index, df_train.loc[:, 'train_acc'], label='train_acc')
+            plt.plot(df_test.index, df_test.loc[:, 'test_loss'], label='test_loss')
+            plt.plot(df_test.index, df_test.loc[:, 'test_acc'], label='test_acc')
+            plt.legend()
+            plt.title('loss&acc')
+            plt.xlabel('epoch')
+            plt.savefig(f'./fig1/{time.strftime("%d%H%M")}.jpg')
+            plt.pause(1)
+
+
+train_data_dir = './identify_dataset/training_data'
+test_data_dir = './identify_dataset/testing_data'
 
 # 加载预训练模型，假设是一个 ResNet50
-model = models.resnet50(pretrained=True)
-
-# 冻结模型的一部分，比如不修改预训练的卷积层参数
-for param in model.parameters():
-    param.requires_grad = False
-
-# 替换模型的最后一个全连接层（假设最后一层是全连接层）
-num_ftrs = model.fc.in_features
-model.fc = torch.nn.Linear(num_ftrs, 10)  # 假设有10个新的输出类别
-
+# model = models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+model = models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
+# vgg.classifier[6] = nn.Linear(in_features=4096, out_features=2, bias=True)
+# googlenet.fc = nn.Linear(in_features=1024, out_features=2, bias=True)
+model.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+# model.fc = nn.Linear(in_features=2048, out_features=27, bias=True)  # resnet50
+model.fc = nn.Linear(in_features=512, out_features=27, bias=True)
 # 定义新的优化器，通常使用较小的学习率
-optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # 加载之前的训练权重
-checkpoint = torch.load('path_to_your_pretrained_model.pth')
-model.load_state_dict(checkpoint['model_state_dict'])
-optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-epoch = checkpoint['epoch']
-loss = checkpoint['loss']
-
-# 继续训练模型
-# 请注意：这里的代码假设你有一个新的数据集来继续训练模型
-# 假设 train_loader 是你的新数据集的 DataLoader
-for epoch in range(epoch, num_epochs):
-    for batch_idx, (data, target) in enumerate(train_loader):
-        optimizer.zero_grad()
-        output = model(data)
-        loss = your_loss_function(output, target)
-        loss.backward()
-        optimizer.step()
-
-# 保存继续训练后的模型
-torch.save({
-    'epoch': epoch,
-    'model_state_dict': model.state_dict(),
-    'optimizer_state_dict': optimizer.state_dict(),
-    'loss': loss,
-}, 'path_to_save_continued_training_model.pth')
+checkpoint = torch.load('./models1/model_0350.pth')
+model.load_state_dict(checkpoint)
+model = Classifier(model, train_data_dir, test_data_dir, fig=True)
+model.train()
