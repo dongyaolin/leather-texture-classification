@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>皮革纹理分类</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .content {
+            text-align: center;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+            background-color: #fff;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 调整预测结果样式 */
+        p {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+            word-wrap: break-word; /* 在单词边界处换行 */
+            overflow-wrap: break-word; /* 在非单词边界处换行 */
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Leather texture classification</h1>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Upload Image</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        function uploadFile() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+
+            var formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var resultElement = document.getElementById('result');
+                resultElement.innerText = 'Prediction: ' + data.prediction;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
