@@ -4,12 +4,13 @@ import torch.nn as nn
 from matplotlib import pyplot as plt
 from torch import optim
 from torchvision import models
-from torchvision.models import VGG16_BN_Weights, ResNet50_Weights, GoogLeNet_Weights
+from torchvision.models import VGG16_BN_Weights, ResNet50_Weights, GoogLeNet_Weights,ResNet18_Weights
 import numpy as np
 import os
 from dataset import DataSet
 from metrics import AccuracyScore
 import pandas as pd
+
 torch.set_printoptions(precision=2, sci_mode=False)
 
 
@@ -33,14 +34,14 @@ class Net(nn.Module):
 
 
 class Classifier:
-    def __init__(self, model, train_data_dir, test_data_dir, fig):
-        self.batch_size = 64
+    def __init__(self, model, train_data_dir, test_data_dir, fig=True):
+        self.batch_size = 128
         self.num_workers = 0
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = model
         self.train_data_dir = train_data_dir
         self.test_data_dir = test_data_dir
-        self.total_epoch = 100
+        self.total_epoch = 400
         self.lr = 0.005
         self.loss_fn = nn.CrossEntropyLoss()
         self.acc_fn = AccuracyScore()
@@ -49,8 +50,8 @@ class Classifier:
             lr=self.lr
         )
         self.print_interval = 2
-        self.model_dir = 'models1'
-        self.fig = True
+        self.model_dir = './models1'
+        self.fig = fig
         if not os.path.exists(self.model_dir):
             os.makedirs(self.model_dir)
         if not os.path.exists("./fig1"):
@@ -128,16 +129,17 @@ class Classifier:
                 test_acc.append(acc.item())
                 if batch % self.print_interval == 0:
                     print(f'{epoch + 1}/{self.total_epoch} {batch} test_loss={loss.item()} -- {acc.item():.4f}')
-                batch += 1
-                if epoch+1 % 10 == 0:
-                    self.save_model(epoch)
+                    batch += 1
+                    if (epoch + 1) % 10 == 0:
+                        self.save_model((epoch + 1))
+                        print(f'model_{(epoch + 1)}model has saved!')
 
             print(f'{epoch} train mean loss {np.mean(train_loss):.4f} test mean loss {np.mean(test_loss):.4f}'
                   f' train mean acc {np.mean(train_acc):.4f} test mean acc {np.mean(test_acc):.4f}')
         df_train = pd.DataFrame(
             {'train_loss': train_loss, 'train_acc': train_acc})
         df_train.index = range(1, len(train_loss) + 1)
-        df_train.to_csv('./fig/train_log.csv')
+        df_train.to_csv('./fig1/train_log.csv')
         df_test = pd.DataFrame(
             {'test_loss': test_loss, 'test_acc': test_acc})
         df_test.index = range(1, len(test_loss) + 1)
@@ -174,12 +176,23 @@ if __name__ == '__main__':
         # vgg = models.vgg16_bn(weights=VGG16_BN_Weights.IMAGENET1K_V1)
         # googlenet = models.googlenet(weights=GoogLeNet_Weights.IMAGENET1K_V1)
         # googlenet = models.googlenet()
-        resnet = models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+        resnet = models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
+        # resnet = models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
         # vgg.classifier[6] = nn.Linear(in_features=4096, out_features=2, bias=True)
         # googlenet.fc = nn.Linear(in_features=1024, out_features=2, bias=True)
         resnet.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-        resnet.fc = nn.Linear(in_features=2048, out_features=27, bias=True)
+        resnet.fc = nn.Linear(in_features=512, out_features=27, bias=True)  # 50--> 2048
         model = Classifier(resnet, train_data_dir, test_data_dir, fig=1)
         model.train()
         end = time.time()
         print(f'{model} training time:{end - start:.2f}s')
+
+        # # 定义新的优化器，通常使用较小的学习率
+        # optimizer = optim.Adam(model.parameters(), lr=0.001)
+        #
+        # # 加载之前的训练权重
+        # checkpoint = torch.load('path_to_your_pretrained_model.pth')
+        # model.load_state_dict(checkpoint['model_state_dict'])
+        # optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        # epoch = checkpoint['epoch']
+        # loss = checkpoint['loss']

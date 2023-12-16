@@ -129,9 +129,10 @@ class Classifier:
                 test_acc.append(acc.item())
                 if batch % self.print_interval == 0:
                     print(f'{epoch + 1}/{self.total_epoch} {batch} test_loss={loss.item()} -- {acc.item():.4f}')
-                batch += 1
-                if epoch+1 % 10 == 0:
-                    self.save_model(epoch)
+                    batch += 1
+                    if (epoch+1) % 10 == 0:
+                        self.save_model((epoch+1))
+                        print(f'model_{(epoch + 1)}model has saved!')
 
             print(f'{epoch} train mean loss {np.mean(train_loss):.4f} test mean loss {np.mean(test_loss):.4f}'
                   f' train mean acc {np.mean(train_acc):.4f} test mean acc {np.mean(test_acc):.4f}')
