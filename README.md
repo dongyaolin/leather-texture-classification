@@ -57,7 +57,7 @@
    - ```python
      python train1.py
    - 训练好的模型位于models1文件夹下。
-3. - [ ] **启动后端**：运行后端服务，提供图像分类的 API。![后端服务](https://img.shields.io/badge/后端服务-启动指南-blue)
+3. - [x] **启动后端**：运行后端服务，提供图像分类的 API。![后端服务](https://img.shields.io/badge/后端服务-启动指南-blue)
 4. - [ ] **API 调用**：通过 API 发送图像并接收分类结果。[![API 调用](https://img.shields.io/badge/API%20调用-示例代码-lightgrey)](API调用链接) 
 ### 贡献指南 [![提交 Issue](https://img.shields.io/badge/提交-Issue-9cf)](提交Issue链接) [![Pull Request](https://img.shields.io/badge/Pull%20Request-贡献代码-brightgreen)](PR链接)
 
