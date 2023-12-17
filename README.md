@@ -13,9 +13,9 @@
 
 
 
-<details>
 
-<summary>功能特性 </summary>
+
+### 功能特性
 
 
 [![图像识别](https://img.shields.io/badge/图像识别-支持-brightgreen)](功能详情链接)
@@ -28,10 +28,10 @@
 - **模型训练和优化**：提供训练脚本和工具，以便用户能够根据自己的数据集对模型进行训练和优化。   
 - **易用性**：提供简洁易用的 API 和界面，使其他开发者能够轻松地集成此分类系统到自己的应用中。  
 
-</details>
 
-<details>
-<summary>技术栈</summary>
+
+
+### 技术栈
 
 [![PyTorch](https://img.shields.io/badge/PyTorch-v1.9.0-%237732a8)](https://pytorch.org/)
 [![Flask](https://img.shields.io/badge/Flask-v2.0-%2348c35e)](https://flask.palletsprojects.com/)
@@ -42,7 +42,6 @@
 - **Python 后端**：使用 Flask 框架构建简单易用的后端 API。  
 - **图像处理工具**：使用 OpenCV 等库进行图像处理和预处理。
 
-</details>
 
 ### 使用方法
 
