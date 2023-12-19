@@ -56,3 +56,16 @@ img {
   margin: 0 auto;
 }
 
+#predictionResult {
+  background-color: #ffd700; /* 黄色背景 */
+  padding: 15px; /* 内边距 */
+  border: 2px solid #ffa500; /* 橙色边框 */
+  border-radius: 8px; /* 圆角 */
+  font-family: 'Arial', sans-serif; /* 字体 */
+  color: #333; /* 文本颜色 */
+  text-align: center; /* 文本居中 */
+  font-size: 14px; /* 设置字体大小为 12 像素 */
+  /*font-weight: bold; !* 加粗 *!*/
+}
+
+

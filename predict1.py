@@ -34,6 +34,10 @@ class MyModel:
         self.model.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         self.model.fc = nn.Linear(in_features=512, out_features=27, bias=True)
         self.model.load_state_dict(torch.load(self.parm, map_location=torch.device('cpu')))
+        self.model.eval()
+
+    def forward(self, x):
+        return self.model(x)
 
     def preprocess_image(self, img):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)

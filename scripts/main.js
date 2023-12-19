@@ -51,10 +51,76 @@ function predictImage(file) {
   // 这里可以使用 Fetch 或 XMLHttpRequest 发送文件到后端进行处理和预测
   // 在这个函数中，你应该发送文件到你的后端服务，并获取预测结果
   // 假设预测结果是一个 JSON 格式的数据
-  const predictionResult = {
-    result: '预测结果'
-  };
+  const formData = new FormData();
+  formData.append('file', file);
 
-  // 将预测结果显示在页面上
-  document.getElementById('predictionResult').innerText = `预测结果：${predictionResult.result}`;
+  // fetch('http://localhost:5000/predict', {
+  //   method: 'POST',
+  //   body: formData
+  // })
+  //     .then(response=>response.json())
+  //     .then(data => {
+  //   // 从后端获取预测结果
+  //   const predictionResult = data.result;
+  //
+  //   // 更新页面上的预测结果元素
+  //   const predictionResultDiv = document.getElementById('predictionResult');
+  //   predictionResultDiv.textContent = `预测结果为: ${predictionResult}`;
+  // })
+  //     .catch(error => {
+  //   console.error('Error:', error);
+  //   // 处理错误情况
+  // });
+
+
+  // .then(response => response.json())
+  //
+  // .then(data => {
+  //     const predictionResultDiv = document.getElementById('predictionResult');
+  //     predictionResultDiv.innerHTML = '';
+  //     // 从后端获取预测结果数组，假设是一个名为 "similarResults" 的数组
+  //     const predictionResult = data.result;
+  //
+  //     // 创建一个 <ul> 列表，用于展示预测结果
+  //     const resultList = document.createElement('ol');
+  //
+  //     // 将最相似的六个结果添加到列表中
+  //     for (let i = 0; i < 6 && i < predictionResult.length; i++) {
+  //         const listItem = document.createElement('li');
+  //         listItem.textContent = predictionResult[i]; // 假设每个结果是字符串形式
+  //         resultList.appendChild(listItem);
+  //     }
+  //
+  //     // 将列表添加到预测结果的 <div> 中
+  //     predictionResultDiv.appendChild(resultList);
+  // })
+  // .catch(error => {
+  //     console.error('Error:', error);
+  //     // 处理错误情况
+  // });
+  // }
+
+
+  fetch('http://localhost:5000/predict', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    const predictionResultDiv = document.getElementById('predictionResult');
+    predictionResultDiv.innerHTML = ''; // 清空之前的内容
+
+    const orderedList = document.createElement('ol'); // 创建有序列表元素
+
+    data.result.forEach(result => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `类别: ${result.class}: 概率: ${result.probability}`;
+      orderedList.appendChild(listItem); // 将每个结果作为列表项添加到有序列表中
+    });
+
+    predictionResultDiv.appendChild(orderedList); // 将有序列表添加到 HTML 元素中
+  })
+  .catch(error => console.error('Error:', error));
 }
+
+
