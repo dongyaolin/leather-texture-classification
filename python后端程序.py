@@ -6,6 +6,7 @@ from torch import nn
 from torchvision import models, transforms
 from PIL import Image
 from predict1 import MyModel
+
 app = Flask(__name__)
 CORS(app)  # 启用 CORS
 
@@ -55,7 +56,7 @@ def predict_image(image_path):
     # """六个类别及其概率"""
     # 获取最接近的六个类别及其概率
     # 假设模型输出的原始概率值
-    prediction_array = (1/(1+np.exp(-output.squeeze().numpy()))).astype(float).round(decimals=4)
+    prediction_array = (1 / (1 + np.exp(-output.squeeze().numpy()))).astype(float).round(decimals=4)
 
     # 读取类别信息（不变）
     with open('imagenet_classes.txt', 'r', encoding='utf-8') as file:
@@ -65,14 +66,10 @@ def predict_image(image_path):
     # 获取最接近的六个类别及其概率
     print(type(prediction_array), type(classes))
     top_similar_classes_indices = np.argsort(prediction_array)[-6:][::-1]
-    top_similar_classes = [{'class': classes[i], 'probability': prediction_array[i]} for i in top_similar_classes_indices]
+    top_similar_classes = [{'class': classes[i], 'probability': prediction_array[i]} for i in
+                           top_similar_classes_indices]
     print(top_similar_classes)
     return top_similar_classes
-
-
-
-
-
 
 
 # 定义 Flask 路由，处理上传图片并进行预测
@@ -87,6 +84,7 @@ def upload_file():
     print(prediction_result)
     # return jsonify({'prediction': prediction_result})
     return jsonify({'result': prediction_result})
+
 
 if __name__ == '__main__':
     app.run(debug=True)  # 运行 Flask 应用

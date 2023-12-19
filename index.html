@@ -1,46 +1,49 @@
-<link href="styles/style.css" rel="stylesheet" />
+<link href="styles/style.css" rel="stylesheet"/>
 <!doctype html>
 <html lang="zh-CN">
 <head>
     <link
-  href="https://fonts.googleapis.com/css?family=Open+Sans"
-  rel="stylesheet" />
+            href="https://fonts.googleapis.com/css?family=Open+Sans"
+            rel="stylesheet"/>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width"/>
     <meta name="author" content="duncan-dong"/>
     <meta
-    name="description"
-    content="personal blog"/>
-    <link rel="icon" href="favicon_logosc/favicon.ico" type="image/x-icon" />
+            name="description"
+            content="personal blog"/>
+    <link rel="icon" href="favicon_logosc/favicon.ico" type="image/x-icon"/>
 
     <title>duncan's homepage</title>
     <script src="scripts/main.js" defer></script>
 </head>
 <body>
-    <h1>皮革纹理分类</h1>
-    <img src="images/oip.png" alt="皮革纹理" />
-    <p>这个项目基于深度学习技术，旨在识别和分类各种皮革纹理。</p>
-    <h2>应用领域涉及</h2>
-    <ol>
-        <li> <a href="https://zh.wikipedia.org/wiki/%E8%89%BA%E6%9C%AF%E8%AE%BE%E8%AE%A1"> 时尚设计</a></li>
-        <li>工业制造</li>
-        <li>艺术创作</li>
+<h1>皮革纹理分类</h1>
+<img src="images/oip.png" alt="皮革纹理"/>
+<p>这个项目基于深度学习技术，旨在识别和分类各种皮革纹理。</p>
+<!--    <h2>应用领域涉及</h2>-->
+<!--    <ol>-->
+<!--        <li> <a href="https://zh.wikipedia.org/wiki/%E8%89%BA%E6%9C%AF%E8%AE%BE%E8%AE%A1"> 时尚设计</a></li>-->
+<!--        <li>工业制造</li>-->
+<!--        <li>艺术创作</li>-->
 
-    </ol>
-    <h2>现在你可以通过点击下方上传图片按钮选择图片实现分类</h2>
-    <!-- 添加一个按钮来选择上传图片 -->
-  <input type="file" accept="image/*" onchange="previewImage(event)">
+<!--    </ol>-->
+<h2> 点击 -><b>
+    选择文件
+</b>
+    开始预测</h2>
+<!-- 添加一个按钮来选择上传图片 -->
+<input type="file" accept="image/*" onchange="previewImage(event)">
 
-  <!-- 图片预览区域 -->
-  <img id="imagePreview" src="#" alt="图片预览" style="display: none;">
+<!-- 图片预览区域 -->
+<img id="imagePreview" src="#" alt="图片预览" style="display: none;">
 
-  <!-- 显示预测结果 -->
-  <div id="predictionResult">
+<!-- 显示预测结果 -->
+<div id="predictionResult">
 
-  </div>
+</div>
 <p>
-  要提供意见和建议，请将信件邮寄至<a href="contacts.html#Mailing_address">我们的地址</a>。
+    要提供意见和建议，请将信件邮寄至<a href="contacts.html#Mailing_address">我们的地址</a>。
 </p>
 
 
