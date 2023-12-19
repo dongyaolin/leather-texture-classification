@@ -1,7 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-import torch
 from PIL import Image
-import torchvision.transforms as transforms
 from predict1 import MyModel
 
 app = Flask(__name__)
@@ -33,7 +31,6 @@ def predict():
 
         # 处理模型输出并返回预测结果
         # 这里假设模型输出是一个字符串
-        prediction = "Placeholder_prediction"  # 替换为实际预测结果
         return jsonify({'prediction': output})
 
 
