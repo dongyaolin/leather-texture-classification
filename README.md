@@ -51,13 +51,13 @@
 - 将收集到的原始数据重命名，可使用scripts中的rename.py进行重命名。
 - 使用dataaug_every.py脚本对每一类别进行基础数据增强，该过程也可以在训练过程的dataset.py进行。
 - 使用splitdataset.py脚本对原始分类好的数据集进行训练集和测试集划分。并放入identify_dataset文件夹下。注意：划分比例不同可能导致部分数据不能完全划分到训练集或测试集。
-2. - [x] **模型训练**：使用提供的训练脚本对数据集进行训练，或者根据自己的需求修改并训练模型。![模型训练](https://img.shields.io/badge/使用指南-red)
+2. - [x] **模型训练**：使用提供的训练脚本对数据集进行训练，或者根据自己的需求修改并训练模型。
    - 准备完分类好的数据集后。 使用:
    - ```python
      python train1.py
    - 训练好的模型位于models1文件夹下。
-3. - [x] **启动后端**：运行后端服务，提供图像分类的 API。![后端服务](https://img.shields.io/badge/后端服务-启动指南-blue)
-4. - [ ] **API 调用**：通过 API 发送图像并接收分类结果。[![API 调用](https://img.shields.io/badge/API%20调用-示例代码-lightgrey)](API调用链接) 
+3. - [x] **启动后端**：运行后端服务，提供图像分类的 API。
+4. - [x] **API 调用**：通过 API 发送图像并接收分类结果。
 ### 贡献指南 [![提交 Issue](https://img.shields.io/badge/提交-Issue-9cf)](提交Issue链接) [![Pull Request](https://img.shields.io/badge/Pull%20Request-贡献代码-brightgreen)](PR链接)
 
 欢迎任何形式的贡献和反馈！您可以通过提交 Issue 或 Pull Request 的方式参与项目，帮助改进代码质量、增加新功能或修复 Bug。
